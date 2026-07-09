@@ -37,10 +37,8 @@ jobs:
       - name: Lint with flake8
         shell: cmd
         run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          python -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          python -m flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Run Unit Tests with pytest
         shell: cmd
@@ -130,13 +128,11 @@ jobs:
       - name: Stop Existing Streamlit
         shell: cmd
         run: |
-          # Use powershell with Bypass policy explicitly to stop Streamlit processes safely
           powershell -ExecutionPolicy Bypass -Command "$processes = Get-CimInstance Win32_Process -Filter \"Name='python.exe'\" | Where-Object { $_.CommandLine -like '*app.py*' -or $_.CommandLine -like '*streamlit*' }; if ($processes) { Write-Host 'Stopping existing Streamlit process(es)...'; $processes | ForEach-Object { Stop-Process -Id $_.ProcessId -Force } } else { Write-Host 'No running Streamlit processes found.' }"
 
       - name: Start Streamlit
         shell: cmd
         run: |
-          # Spawn a new cmd window running the Streamlit app in the background
           start cmd /k "streamlit run Dino_smart/app.py"
 
       - name: Deployment Complete
