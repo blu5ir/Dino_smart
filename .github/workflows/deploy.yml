@@ -28,14 +28,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Dependencies
-        shell: powershell
+        shell: cmd
         run: |
           python -m pip install --upgrade pip
           pip install flake8 pytest
-          if (Test-Path requirements.txt) { pip install -r requirements.txt }
+          if exist requirements.txt pip install -r requirements.txt
 
       - name: Lint with flake8
-        shell: powershell
+        shell: cmd
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -43,7 +43,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Run Unit Tests with pytest
-        shell: powershell
+        shell: cmd
         run: |
           python -m pytest tests/
 
@@ -56,7 +56,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Update Version & Build Metadata
-        shell: powershell
+        shell: cmd
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
@@ -90,13 +90,13 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Prepare Static Assets
-        shell: powershell
+        shell: cmd
         run: |
-          New-Item -ItemType Directory -Force -Path dist
-          Copy-Item index.html dist/
-          Copy-Item style.css dist/
-          Copy-Item script.js dist/
-          if (Test-Path assets) { Copy-Item -Recurse assets dist/ }
+          if not exist dist mkdir dist
+          copy index.html dist\
+          copy style.css dist\
+          copy script.js dist\
+          if exist assets xcopy /E /I /Y assets dist\assets
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
@@ -117,36 +117,29 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Requirements
-        shell: powershell
+        shell: cmd
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run Version Update
-        shell: powershell
+        shell: cmd
         run: |
           python Dino_smart/update_version.py
 
       - name: Stop Existing Streamlit
-        shell: powershell
+        shell: cmd
         run: |
-          # Safely find and stop only the python/streamlit processes running app.py
-          # This avoids stopping the GitHub Runner process or other unrelated python workflows
-          $processes = Get-CimInstance Win32_Process -Filter "Name='python.exe'" | Where-Object { $_.CommandLine -like "*app.py*" -or $_.CommandLine -like "*streamlit*" }
-          if ($processes) {
-              Write-Host "Stopping existing Streamlit process(es)..."
-              $processes | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
-          } else {
-              Write-Host "No running Streamlit processes found."
-          }
+          # Use powershell with Bypass policy explicitly to stop Streamlit processes safely
+          powershell -ExecutionPolicy Bypass -Command "$processes = Get-CimInstance Win32_Process -Filter \"Name='python.exe'\" | Where-Object { $_.CommandLine -like '*app.py*' -or $_.CommandLine -like '*streamlit*' }; if ($processes) { Write-Host 'Stopping existing Streamlit process(es)...'; $processes | ForEach-Object { Stop-Process -Id $_.ProcessId -Force } } else { Write-Host 'No running Streamlit processes found.' }"
 
       - name: Start Streamlit
-        shell: powershell
+        shell: cmd
         run: |
-          # Spawn a new powershell window running the Streamlit application in the background
-          Start-Process powershell -ArgumentList "-NoExit","-Command","streamlit run Dino_smart/app.py"
+          # Spawn a new cmd window running the Streamlit app in the background
+          start cmd /k "streamlit run Dino_smart/app.py"
 
       - name: Deployment Complete
-        shell: powershell
+        shell: cmd
         run: |
-          Write-Host "Dino Smart deployed successfully!"
+          echo Dino Smart deployed successfully!
