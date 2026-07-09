@@ -22,7 +22,7 @@ concurrency:
 jobs:
   # 1. CI Job: Code Quality Checks and Testing
   ci-test-lint:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -31,15 +31,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Install Dependencies
+        shell: bash
         run: |
           python -m pip install --upgrade pip
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Lint with flake8
+        shell: bash
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -47,13 +48,14 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Run Unit Tests with pytest
+        shell: bash
         run: |
           python -m pytest tests/
 
   # 2. Build Job: Updates build version metadata and packages the application
   build-and-package:
     needs: ci-test-lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -64,6 +66,7 @@ jobs:
           python-version: '3.11'
 
       - name: Update Version & Build Metadata
+        shell: bash
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
@@ -88,7 +91,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -97,6 +100,7 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Prepare Static Assets
+        shell: bash
         run: |
           mkdir -p dist
           cp index.html dist/
@@ -113,43 +117,51 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  # 4. Deploy Streamlit App: Demo/Manual deployment template using SSH
-  deploy-streamlit-app:
+  # 4. Local Deployment: Deploys Streamlit directly on the self-hosted Windows runner
+  deploy-local:
     needs: build-and-package
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    # This job can be fully activated when the user sets up secrets: SSH_HOST, SSH_USERNAME, SSH_KEY
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Download App Artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          name: dino-smart-app
-          path: ./app-dist
+          python-version: "3.11"
 
-      - name: Display Deployment Metadata
+      - name: Install Requirements
+        shell: powershell
         run: |
-          cat ./app-dist/version.json
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      # SSH deployment template: In a real demo, this copies files to the target server
-      # and restarts the Streamlit service. It is preconfigured but will skip if secrets are missing.
-      - name: Deploy to Server (Demo/Manual target)
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USERNAME }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: Run Version Update
+        shell: powershell
         run: |
-          if [ -z "$SSH_HOST" ]; then
-            echo "⚠️ SSH_HOST secret is not set. Skipping live SSH deployment step."
-            echo "💡 For B.Tech viva demo: this step demonstrates automated copy & restart via SSH when secrets are configured."
-          else
-            echo "🚀 Connecting to $SSH_HOST..."
-            # Setup SSH key
-            mkdir -p ~/.ssh
-            echo "$SSH_KEY" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-            # Copy files via scp/rsync
-            # scp -o StrictHostKeyChecking=no -r ./app-dist/* $SSH_USER@$SSH_HOST:/var/www/dino_smart/
-            # Restart Streamlit service
-            # ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "sudo systemctl restart streamlit"
-            echo "✅ Deployment completed on target server."
-          fi
+          python Dino_smart/update_version.py
+
+      - name: Stop Existing Streamlit
+        shell: powershell
+        run: |
+          # Safely find and stop only the python/streamlit processes running app.py
+          # This avoids stopping the GitHub Runner process or other unrelated python workflows
+          $processes = Get-CimInstance Win32_Process -Filter "Name='python.exe'" | Where-Object { $_.CommandLine -like "*app.py*" -or $_.CommandLine -like "*streamlit*" }
+          if ($processes) {
+              Write-Host "Stopping existing Streamlit process(es)..."
+              $processes | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+          } else {
+              Write-Host "No running Streamlit processes found."
+          }
+
+      - name: Start Streamlit
+        shell: powershell
+        run: |
+          # Spawn a new powershell window running the Streamlit application in the background
+          Start-Process powershell -ArgumentList "-NoExit","-Command","streamlit run Dino_smart/app.py"
+
+      - name: Deployment Complete
+        shell: powershell
+        run: |
+          Write-Host "Dino Smart deployed successfully!"
