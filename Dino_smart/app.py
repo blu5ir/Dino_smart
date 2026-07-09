@@ -446,6 +446,28 @@ with st.sidebar:
         time.sleep(0.5)
         st.rerun()
 
+    # Render version information at the bottom of the sidebar
+    st.markdown("<hr style='margin: 20px 0 10px 0; opacity: 0.15;'>", unsafe_allow_html=True)
+    version_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "version.json")
+    vdata = {"version": "1.0.0", "build": "001", "timestamp": "09 Jul 2026 11:42 PM"}
+    try:
+        if os.path.exists(version_file):
+            with open(version_file, "r") as vf:
+                vdata = json.load(vf)
+    except Exception:
+        pass
+    
+    st.markdown(
+        f"""
+        <div style="font-family: monospace; font-size: 0.75rem; color: #64748b; line-height: 1.3;">
+            <div>📦 <b>Version</b>: {vdata.get('version', '1.0.0')}</div>
+            <div>🛠️ <b>Build</b>: {vdata.get('build', '001')}</div>
+            <div>🕒 <b>Deployed</b>: {vdata.get('timestamp', '09 Jul 2026 11:42 PM')}</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     ai_provider = None
     try:
         active_api_key = local_config.get(f"{provider_sel}_api_key", "")

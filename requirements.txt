@@ -7,3 +7,4 @@ python-pptx
 pillow
 google-generativeai
 openai
+pytest
