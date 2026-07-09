@@ -79,7 +79,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -88,13 +88,12 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Prepare Static Assets
-        shell: cmd
         run: |
-          if not exist dist mkdir dist
-          copy index.html dist\
-          copy style.css dist\
-          copy script.js dist\
-          if exist assets xcopy /E /I /Y assets dist\assets
+          mkdir -p dist
+          cp index.html dist/
+          cp style.css dist/
+          cp script.js dist/
+          if [ -d assets ]; then cp -r assets dist/; fi
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
