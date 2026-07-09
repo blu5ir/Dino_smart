@@ -1,0 +1,35 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Python cache and temporary files
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Local databases
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Configuration and sensitive files (API Keys)
+Dino_smart/config.json
+config.json
+
+# User uploads and exports (ignore files, keep folder)
+Dino_smart/uploads/*
+Dino_smart/exports/*
+Dino_smart/guides/*
+Dino_smart/quizzes/*
+Dino_smart/images/*
+
+!Dino_smart/uploads/.gitkeep
+!Dino_smart/exports/.gitkeep
+!Dino_smart/guides/.gitkeep
+!Dino_smart/quizzes/.gitkeep
+!Dino_smart/images/.gitkeep

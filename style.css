@@ -1,0 +1,904 @@
+/* ==========================================================================
+   DINO SMART - PRINT EDITORIAL STYLESHEET
+   Strict monochrome black/white/grayscale. Handcrafted aesthetics.
+   ========================================================================== */
+
+/* 1. Global Reset & Base Setup */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: initial; /* Lenis handles smooth scrolling */
+}
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+    font-family: 'Satoshi', 'General Sans', -apple-system, sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* 2. Paper Grain Noise Texture */
+.noise-overlay {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.05;
+    z-index: 9999;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* 3. Global Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+}
+
+/* Typography Scales */
+.hero-title { font-size: 96px; }
+h2 { font-size: 56px; }
+h3 { font-size: 42px; }
+h4 { font-size: 28px; }
+
+p {
+    font-weight: 400;
+    color: #222222;
+}
+
+/* Zine / Section Labels */
+.zine-label {
+    font-family: 'General Sans', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    display: inline-block;
+    border: 1px solid #000000;
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+/* 4. Layout Container */
+.editorial-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* 5. Editorial Header */
+.editorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 60px;
+}
+
+.nav-brand {
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: -1px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-link {
+    font-family: 'General Sans', sans-serif;
+    color: #000000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    transition: opacity 0.3s ease;
+}
+
+.nav-link:hover {
+    opacity: 0.5;
+}
+
+.nav-meta {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+/* 6. Section Styles */
+
+/* Hero Section */
+.section-hero {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 80px;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 120px;
+    position: relative;
+}
+
+.hero-top-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 40px;
+}
+
+.hero-title-container {
+    position: relative;
+    margin: 40px 0;
+}
+
+.hero-title .asymmetrical {
+    padding-left: 100px;
+}
+
+.sketch-arrow {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    position: absolute;
+}
+
+.hero-arrow {
+    width: 140px;
+    right: 15%;
+    top: 40%;
+}
+
+.hero-footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 80px;
+    align-items: flex-end;
+    margin-top: auto;
+}
+
+.hero-description {
+    font-size: 22px;
+    line-height: 1.5;
+}
+
+.hero-cta-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.scroll-hint {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #555555;
+}
+
+/* About Section */
+.section-about {
+    padding-bottom: 120px;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 120px;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 100px;
+    margin-top: 40px;
+}
+
+.about-heading {
+    margin-bottom: 30px;
+    font-size: 50px;
+    line-height: 1.0;
+}
+
+.about-lead {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-bottom: 50px;
+}
+
+/* Polaroid component */
+.polaroid-photo {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    padding: 16px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 4px 0 rgba(0,0,0,1);
+    transform: rotate(-2deg);
+    transition: transform 0.3s ease;
+}
+
+.polaroid-photo:hover {
+    transform: rotate(0deg);
+}
+
+.polaroid-image-placeholder {
+    width: 100%;
+    height: 240px;
+    background-color: #f3f3f3;
+    border: 2px solid #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.vintage-camera-svg {
+    width: 100px;
+    height: 100px;
+    fill: none;
+    stroke: #000000;
+    stroke-width: 2.5;
+}
+
+.polaroid-caption {
+    font-family: 'General Sans', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 15px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* About Right Column decorations */
+.about-right-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.editorial-text-block h3 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.marker-circle-container {
+    position: relative;
+    display: inline-block;
+}
+
+.handwritten-circle {
+    position: absolute;
+    top: -5px;
+    left: -10px;
+    right: -10px;
+    bottom: -5px;
+    border: 2.5px solid #000000;
+    border-radius: 48% 52% 50% 50% / 40% 40% 60% 60%;
+    pointer-events: none;
+    transform: rotate(-1.5deg);
+}
+
+/* Paper Tape Decoration */
+.paper-tape {
+    background-color: #f3f3f3;
+    border-left: 2px dashed #000000;
+    border-right: 2px dashed #000000;
+    padding: 8px 30px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: center;
+    margin: 40px auto;
+    width: fit-content;
+    transform: rotate(1deg);
+}
+
+/* Sticky Note Component */
+.sticky-note {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 2px;
+    padding: 30px;
+    position: relative;
+    transform: rotate(3deg);
+    transition: transform 0.3s ease;
+    box-shadow: 4px 4px 0 #000000;
+}
+
+.sticky-note:hover {
+    transform: rotate(1deg);
+}
+
+.sticky-title {
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    border-bottom: 1.5px solid #000000;
+    padding-bottom: 5px;
+}
+
+.sticky-content {
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.tiny-smiley {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 25px;
+    height: 25px;
+    fill: none;
+    stroke: #000000;
+    stroke-width: 2;
+}
+
+/* Features Section */
+.section-features {
+    padding-bottom: 120px;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 120px;
+}
+
+.features-title {
+    margin-bottom: 60px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+/* Feature Cards */
+.feature-card {
+    border: 2px solid #000000;
+    border-radius: 12px;
+    padding: 40px 30px;
+    position: relative;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 380px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 0 rgba(0,0,0,1);
+}
+
+.card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.card-num {
+    font-size: 40px;
+    font-weight: 900;
+    margin: 20px 0;
+}
+
+.card-title {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.card-desc {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #444444;
+}
+
+.card-doodle {
+    margin-top: 30px;
+    align-self: flex-start;
+}
+
+.inline-sketch {
+    width: 45px;
+    height: 35px;
+    fill: none;
+    stroke: #000000;
+    stroke-width: 2;
+}
+
+/* Journal / Documentation Section */
+.section-documentation {
+    padding-bottom: 120px;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 120px;
+}
+
+.doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #000000;
+    padding-bottom: 15px;
+}
+
+.doc-meta {
+    font-family: 'General Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.journal-page {
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 6px 6px 0 #000000;
+}
+
+/* Custom Notebook Lines */
+.notebook-lines-container {
+    background-image: linear-gradient(#e0e0e0 1px, transparent 1px);
+    background-size: 100% 32px;
+    padding: 30px 40px 60px 40px;
+    position: relative;
+}
+
+.notebook-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+/* Brutalist Table */
+.brutalist-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 40px 0;
+}
+
+.brutalist-table th, .brutalist-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2.5px solid #000000;
+    font-size: 15px;
+}
+
+.brutalist-table th {
+    font-family: 'General Sans', sans-serif;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.brutalist-table td {
+    font-weight: 500;
+}
+
+.brutalist-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.checked {
+    font-weight: 700;
+}
+
+.warning {
+    font-weight: 700;
+}
+
+.notebook-footer-notes {
+    border: 2px dashed #000000;
+    padding: 20px 30px;
+    border-radius: 4px;
+    font-size: 15px;
+    background-color: #ffffff;
+    position: relative;
+}
+
+.coffee-cup-doodle {
+    position: absolute;
+    right: 20px;
+    bottom: -30px;
+    width: 60px;
+    height: 60px;
+    transform: rotate(-10deg);
+}
+
+/* Testimonials Section */
+.section-testimonials {
+    padding-bottom: 120px;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 120px;
+}
+
+.testimonials-title {
+    margin-bottom: 60px;
+}
+
+.testimonials-container {
+    display: grid;
+    grid-template-columns: 1fr 2px 1fr;
+    gap: 60px;
+}
+
+.testimonial-divider {
+    background-color: #000000;
+    height: 100%;
+    width: 2px;
+}
+
+.testimonial-excerpt {
+    position: relative;
+    padding-top: 40px;
+}
+
+.q-mark {
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 0.1;
+    position: absolute;
+    top: 40px;
+    left: -20px;
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.excerpt-text {
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.excerpt-author {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.handwritten-signature {
+    font-family: 'Courier New', Courier, monospace;
+    font-style: italic;
+    font-size: 18px;
+    text-transform: lowercase;
+    opacity: 0.7;
+}
+
+/* FAQ Notebook Section */
+.section-faq {
+    padding-bottom: 120px;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 120px;
+}
+
+.faq-main-title {
+    margin-bottom: 60px;
+}
+
+.faq-notebook {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    box-shadow: 6px 6px 0 rgba(0,0,0,1);
+    position: relative;
+}
+
+.faq-notebook::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background-color: #000000;
+    transform: translateX(-50%);
+}
+
+.faq-page {
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    position: relative;
+}
+
+.page-num {
+    font-family: 'General Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+.faq-item {
+    border-bottom: 1px dashed rgba(0,0,0,0.3);
+    padding-bottom: 25px;
+}
+
+.faq-item:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.faq-question {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 900;
+}
+
+.faq-answer {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #333333;
+}
+
+/* 7. Footer Style */
+.editorial-footer {
+    padding: 80px 0 60px 0;
+    border-top: 2px solid #000000;
+}
+
+.footer-massive-text {
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 60px;
+}
+
+.footer-bottom-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 60px;
+    margin-bottom: 40px;
+}
+
+.footer-illustration svg {
+    width: 140px;
+    height: auto;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.footer-links-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.links-title {
+    font-family: 'General Sans', sans-serif;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.footer-links-col a {
+    color: #000000;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+
+.footer-links-col a:hover {
+    opacity: 0.5;
+}
+
+.footer-copyright {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #555555;
+}
+
+/* 8. Button Component */
+.btn-printed {
+    display: inline-block;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    font-family: 'General Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 12px 30px;
+    border-radius: 999px;
+    transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-printed:hover {
+    opacity: 0.75;
+}
+
+/* 9. Interactive Mascot Dinosaur */
+.mascot-container {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.dino-svg {
+    width: 60px;
+    height: 60px;
+    fill: none;
+    stroke: #000000;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 50%;
+    padding: 6px;
+    box-shadow: 3px 3px 0 #000000;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mascot-container:hover .dino-svg {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.dino-eye-blink {
+    display: none;
+    stroke: #000000;
+    stroke-width: 2.5;
+}
+
+.mascot-speech-bubble {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    max-width: 180px;
+    box-shadow: 2px 2px 0 #000000;
+    position: relative;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.mascot-speech-bubble.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.mascot-speech-bubble::after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background-color: #ffffff;
+    border-right: 2px solid #000000;
+    border-top: 2px solid #000000;
+}
+
+/* 10. Animation Utility Classes */
+.word-reveal {
+    display: inline-block;
+    overflow: hidden;
+}
+
+/* 11. Responsive Layout adjustments */
+@media (max-width: 1024px) {
+    .hero-title { font-size: 72px; }
+    h2 { font-size: 42px; }
+    h3 { font-size: 32px; }
+    
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .testimonials-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .testimonial-divider {
+        height: 2px;
+        width: 100%;
+    }
+    
+    .faq-notebook {
+        grid-template-columns: 1fr;
+    }
+    
+    .faq-notebook::after {
+        display: none;
+    }
+    
+    .footer-bottom-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title { font-size: 50px; }
+    .hero-title .asymmetrical { padding-left: 0; }
+    
+    .editorial-container {
+        padding: 0 20px;
+    }
+    
+    .editorial-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    
+    .hero-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .hero-cta-box {
+        align-items: flex-start;
+    }
+    
+    .footer-copyright {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .mascot-container {
+        bottom: 20px;
+        right: 20px;
+    }
+}

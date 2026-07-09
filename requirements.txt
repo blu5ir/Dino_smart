@@ -1,0 +1,9 @@
+streamlit>=1.35.0
+pandas
+plotly
+pypdf
+python-docx
+python-pptx
+pillow
+google-generativeai
+openai
