@@ -583,6 +583,8 @@ with tabs[0]:
     else:
         st.markdown('<div class="gradient-title" style="font-size: 2rem;">Dashboard</div>', unsafe_allow_html=True)
     
+    st.success("CI/CD Demo Version 1.0.1")
+    
     docs = db.get_documents(workspace_id)
     guide_data = db.get_study_guide(workspace_id)
     quizzes = db.get_quizzes(workspace_id)
